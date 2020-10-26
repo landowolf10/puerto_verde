@@ -1,0 +1,192 @@
+Tablas:
+CREATE TABLE IF NOT EXISTS proveedores
+(
+    id 					INT AUTO_INCREMENT,
+    nombre 			 	VARCHAR(30)  NOT NULL,
+    direccion 	        VARCHAR(300) NOT NULL,
+    telefono 			VARCHAR(10)  NOT NULL,
+    email               VARCHAR(50)  NOT NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS productos
+(
+    id 					INT AUTO_INCREMENT,
+    nombre 			 	VARCHAR(50)  NOT NULL,
+    descripcion 	    VARCHAR(300) NOT NULL,
+    categoria 			VARCHAR(50)  NOT NULL,
+    precio_venta        DECIMAL(10, 2)  NOT NULL,
+    unidad				VARCHAR(10) NOT NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS usuarios
+(
+    id 					INT AUTO_INCREMENT,
+    nombre_usuario		VARCHAR(50),
+    nombre 			 	VARCHAR(30) NOT NULL,
+    apellido_paterno 	VARCHAR(30) NOT NULL,
+    apellido_materno 	VARCHAR(30) NOT NULL,
+    telefono 			VARCHAR(10),
+    estado				VARCHAR(30),
+    ciudad				VARCHAR(30),
+    colonia				VARCHAR(30),
+    calle				VARCHAR(30),
+    numero				VARCHAR(30),
+    pass				VARCHAR(20),
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS almacen
+(
+    id 					INT AUTO_INCREMENT,
+    id_producto 		INT NOT NULL,
+    cantidad 	    	INT NOT NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS sucursales
+(
+    id 					INT AUTO_INCREMENT,
+    nombre 				VARCHAR(100) NOT NULL,
+    direccion 	    	VARCHAR(300) NOT NULL,
+    telefono 	    	VARCHAR(10) NOT NULL,
+    responsable 	    VARCHAR(100) NOT NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS periodo
+(
+    id 					INT AUTO_INCREMENT,
+    fecha 				DATE,
+    hora 	    		TIME,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS costos
+(
+    id 					INT AUTO_INCREMENT,
+    id_periodo 			INT NOT NULL,
+    concepto 	    	VARCHAR(100) NOT NULL,
+    descripcion 	    VARCHAR(300) NOT NULL,
+    precio 	    		DECIMAL(10, 2) NOT NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS gastos
+(
+    id 					INT AUTO_INCREMENT,
+    id_periodo 			INT NOT NULL,
+    tipo 	    		VARCHAR(100) NOT NULL,
+    nombre 	    		VARCHAR(100) NOT NULL,
+    descripcion 	    VARCHAR(300) NOT NULL,
+    precio 	    		DECIMAL(10, 2) NOT NULL,
+    fecha 				DATE NOT NULL,
+    PRIMARY KEY (id)
+);
+
+
+
+
+
+Procedimientos almacenados:
+1. Procedimiento almacenado para insertar en la tabla proveedores.
+DELIMITER //
+CREATE PROCEDURE spInsertarProveedor
+(
+    IN _nombre 		VARCHAR(30), 
+    IN _direccion 	VARCHAR(300),  
+    IN _telefono 	VARCHAR(10),
+    IN _email 		VARCHAR(50)
+)
+BEGIN
+	INSERT INTO proveedores (nombre, direccion, telefono, email)  VALUES
+	(_nombre, _direccion, _telefono, _email);
+END//
+DELIMITER ;
+
+CALL spInsertarProveedor ('Prueba', 'Centro', '5564191682', 'a@algo.com');
+
+
+
+2. Procedimiento almacenado para mostrar todos los proveedores.
+DELIMITER //
+CREATE PROCEDURE spMostrarProveedores
+()
+BEGIN
+	SELECT *
+    FROM proveedores;
+END//
+DELIMITER ;
+
+CALL spMostrarProveedores ();
+
+
+
+3. Procedimiento almacenado para actualizar proveedores.
+DELIMITER //
+CREATE PROCEDURE spActualizarProveedor
+(
+    IN _id			INT,
+    IN _nombre 		VARCHAR(30), 
+    IN _direccion 	VARCHAR(300),  
+    IN _telefono 	VARCHAR(10),
+    IN _email 		VARCHAR(50)
+)
+BEGIN
+	IF _nombre IS NOT NULL THEN
+    	UPDATE proveedores 
+        SET nombre = _nombre
+        WHERE id = _id;
+    END IF;
+    
+	IF _direccion IS NOT NULL THEN
+    	UPDATE proveedores 
+        SET direccion = _direccion
+        WHERE id = _id;
+    END IF;
+
+	IF _telefono IS NOT NULL THEN
+    	UPDATE proveedores 
+        SET telefono = _telefono
+        WHERE id = _id;
+    END IF;
+    
+	IF _email IS NOT NULL THEN
+    	UPDATE proveedores 
+        SET email = _email
+        WHERE id = _id;
+    END IF;
+END//
+DELIMITER ;
+
+
+
+4. Procedimiento almacenado para eliminar proveedores.
+DELIMITER //
+CREATE PROCEDURE spEliminarProveedor
+(
+	IN _id INT
+)
+BEGIN
+	DELETE FROM proveedores WHERE id = _id;
+END//
+DELIMITER ;
+
+
+
+5. Procedimiento almacenado para insertar en la tabla productos.
+DELIMITER //
+CREATE PROCEDURE spInsertarProducto
+(
+    IN _nombre 		 VARCHAR(50), 
+    IN _descripcion  VARCHAR(300),  
+    IN _categoria 	 VARCHAR(50),
+    IN _precio_venta DECIMAL(10, 2),
+    IN _unidad		 VARCHAR(10)
+)
+BEGIN
+	INSERT INTO productos (nombre, descripcion, categoria, precio_venta, unidad)  VALUES
+	(_nombre, _descripcion, _categoria, _precio_venta, _unidad);
+END//
+DELIMITER ;
