@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS productos
     descripcion 	    VARCHAR(300) NOT NULL,
     categoria 			VARCHAR(50)  NOT NULL,
     precio_venta        DECIMAL(10, 2)  NOT NULL,
-    unidad				VARCHAR(10) NOT NULL,
+    unidad				VARCHAR(30) NOT NULL,
     PRIMARY KEY (id)
 );
 
@@ -183,10 +183,265 @@ CREATE PROCEDURE spInsertarProducto
     IN _descripcion  VARCHAR(300),  
     IN _categoria 	 VARCHAR(50),
     IN _precio_venta DECIMAL(10, 2),
-    IN _unidad		 VARCHAR(10)
+    IN _unidad		 VARCHAR(30)
 )
 BEGIN
 	INSERT INTO productos (nombre, descripcion, categoria, precio_venta, unidad)  VALUES
 	(_nombre, _descripcion, _categoria, _precio_venta, _unidad);
+END//
+DELIMITER ;
+
+
+
+6. Procedimiento almacenado para mostrar todos los productos.
+DELIMITER //
+CREATE PROCEDURE spMostrarProductos
+()
+BEGIN
+	SELECT *
+    FROM productos;
+END//
+DELIMITER ;
+
+
+
+7. Procedimiento almacenado para actualizar productos.
+DELIMITER //
+CREATE PROCEDURE spActualizarProducto
+(
+    IN _id			 INT,
+    IN _nombre 		 VARCHAR(50), 
+    IN _descripcion  VARCHAR(300),  
+    IN _categoria 	 VARCHAR(50),
+    IN _precio_venta DECIMAL(10, 2),
+    IN _unidad 		 VARCHAR(30)
+)
+BEGIN
+	IF _nombre IS NOT NULL THEN
+    	UPDATE productos 
+        SET nombre = _nombre
+        WHERE id = _id;
+    END IF;
+    
+	IF _descripcion IS NOT NULL THEN
+    	UPDATE productos 
+        SET descripcion = _descripcion
+        WHERE id = _id;
+    END IF;
+
+	IF _categoria IS NOT NULL THEN
+    	UPDATE productos 
+        SET categoria = _categoria
+        WHERE id = _id;
+    END IF;
+    
+	IF _precio_venta IS NOT NULL THEN
+    	UPDATE productos 
+        SET precio_venta = _precio_venta
+        WHERE id = _id;
+    END IF;
+    
+	IF _unidad IS NOT NULL THEN
+    	UPDATE productos 
+        SET unidad = _unidad
+        WHERE id = _id;
+    END IF;
+END//
+DELIMITER ;
+
+
+
+8. Procedimiento almacenado para eliminar productos.
+DELIMITER //
+CREATE PROCEDURE spEliminarProducto
+(
+	IN _id INT
+)
+BEGIN
+	DELETE FROM productos WHERE id = _id;
+END//
+DELIMITER ;
+
+
+
+9. Procedimiento almacenado para insertar en la tabla usuarios.
+DELIMITER //
+CREATE PROCEDURE spInsertarUsuario
+(
+    IN _nombre_usuario	VARCHAR(50), 
+    IN _nombre  		VARCHAR(30),  
+    IN _ap 	 			VARCHAR(30),
+    IN _am 				VARCHAR(30),
+    IN _telefono		VARCHAR(10),
+    IN _estado			VARCHAR(30),
+    IN _ciudad			VARCHAR(30),
+    IN _colonia			VARCHAR(30),
+    IN _calle			VARCHAR(30),
+    IN _numero			VARCHAR(30),
+    in _pass			VARCHAR(20)
+)
+BEGIN
+	INSERT INTO usuarios (nombre_usuario, nombre, apellido_paterno, apellido_materno, telefono, estado, ciudad, colonia, calle, numero, pass)  VALUES
+	(_nombre_usuario, _nombre, _ap, _am, _telefono, _estado, _ciudad, _colonia, _calle, _numero, _pass);
+END//
+DELIMITER ;
+
+
+
+10. Procedimiento almacenado para mostrar todos los usuarios.
+DELIMITER //
+CREATE PROCEDURE spMostrarUsuarios
+()
+BEGIN
+	SELECT *
+    FROM usuarios;
+END//
+DELIMITER ;
+
+
+
+11. Procedimiento almacenado para actualizar usuarios.
+DELIMITER //
+CREATE PROCEDURE spActualizarUsuario
+(
+    IN _id			 	INT,
+    IN _nombre_usuario	VARCHAR(50),
+    IN _nombre 		 	VARCHAR(30), 
+    IN _ap  			VARCHAR(30),
+    IN _am  			VARCHAR(30),
+    IN _telefono 	 	VARCHAR(10),
+    IN _estado 			VARCHAR(30),
+    IN _ciudad 		 	VARCHAR(30),
+    IN _colonia		 	VARCHAR(30),
+    IN _calle 		 	VARCHAR(30),
+    IN _numero 		 	VARCHAR(30),
+    IN _pass 		 	VARCHAR(20)
+)
+BEGIN
+	IF _nombre_usuario IS NOT NULL THEN
+    	UPDATE usuarios 
+        SET nombre_usuario = _nombre_usuario
+        WHERE id = _id;
+    END IF;
+
+	IF _nombre IS NOT NULL THEN
+    	UPDATE usuarios 
+        SET nombre = _nombre
+        WHERE id = _id;
+    END IF;
+    
+	IF _ap IS NOT NULL THEN
+    	UPDATE usuarios 
+        SET apellido_paterno = _ap
+        WHERE id = _id;
+    END IF;
+
+	IF _am IS NOT NULL THEN
+    	UPDATE usuarios 
+        SET apellido_materno = _am
+        WHERE id = _id;
+    END IF;
+    
+	IF _telefono IS NOT NULL THEN
+    	UPDATE usuarios 
+        SET telefono = _telefono
+        WHERE id = _id;
+    END IF;
+    
+	IF _estado IS NOT NULL THEN
+    	UPDATE usuarios 
+        SET estado = _estado
+        WHERE id = _id;
+    END IF;
+    
+	IF _ciudad IS NOT NULL THEN
+    	UPDATE usuarios 
+        SET ciudad = _ciudad
+        WHERE id = _id;
+    END IF;
+    
+	IF _colonia IS NOT NULL THEN
+    	UPDATE usuarios 
+        SET colonia = _colonia
+        WHERE id = _id;
+    END IF;
+    
+	IF _calle IS NOT NULL THEN
+    	UPDATE usuarios 
+        SET calle = _calle
+        WHERE id = _id;
+    END IF;
+    
+	IF _numero IS NOT NULL THEN
+    	UPDATE usuarios 
+        SET numero = _numero
+        WHERE id = _id;
+    END IF;
+    
+	IF _pass IS NOT NULL THEN
+    	UPDATE usuarios 
+        SET pass = _pass
+        WHERE id = _id;
+    END IF;
+END//
+DELIMITER ;
+
+
+
+12. Procedimiento almacenado para eliminar usuarios.
+DELIMITER //
+CREATE PROCEDURE spEliminarUsuario
+(
+	IN _id INT
+)
+BEGIN
+	DELETE FROM usuarios WHERE id = _id;
+END//
+DELIMITER ;
+
+
+
+13. Procedimiento almacenado para insertar en la tabla almacen.
+DELIMITER //
+CREATE PROCEDURE spInsertarAlmacen
+(
+    IN nombre_producto 	VARCHAR(50), 
+    IN _cantidad  		INT
+)
+BEGIN
+	DECLARE id_p INT;
+    DECLARE mensaje	VARCHAR(200);
+
+	IF EXISTS
+    (
+		SELECT p.nombre
+        FROM productos AS p
+        WHERE p.nombre = nombre_producto
+    ) THEN
+		SELECT p.id
+        INTO id_p
+        FROM productos AS p
+        WHERE p.nombre = nombre_producto;
+    
+		INSERT INTO almacen (id_producto, cantidad)  VALUES
+		(id_p, _cantidad);
+	ELSE
+		SET mensaje = 'El producto seleccionado no existe';
+        SELECT mensaje;
+	END IF;
+END//
+DELIMITER ;
+
+
+
+13. Procedimiento almacenado para mostrar los productos en el almacen.
+DELIMITER //
+CREATE PROCEDURE spMostrarAlmacen
+()
+BEGIN
+	SELECT p.id, p.nombre, a.cantidad
+	FROM almacen AS a
+	JOIN productos AS p ON a.id_producto = p.id
+	GROUP BY a.id;
 END//
 DELIMITER ;

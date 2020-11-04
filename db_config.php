@@ -1,7 +1,7 @@
 <?php
     $DBhost = "localhost";
     $DBuser = "root";
-    $DBpass = "";
+    $DBpass = "landowolf10";
     $DBname = "puerto_verde";
      
     try
