@@ -85,6 +85,26 @@ CREATE TABLE IF NOT EXISTS gastos
     PRIMARY KEY (id)
 );
 
+CREATE TABLE IF NOT EXISTS entradas
+(
+    id 					INT AUTO_INCREMENT,
+    id_admin_entradas	INT NOT NULL,
+    id_producto 		INT NOT NULL,
+    id_proveedor 		INT NOT NULL,
+    id_usuario			INT NOT NULL,
+    precio_unitario 	DECIMAL(10, 3) NOT NULL,
+    cantidad			INT NOT NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS admin_entradas
+(
+    id		INT AUTO_INCREMENT,
+    fecha	DATE NOT NULL,
+    hora 	TIME NOT NULL,
+    PRIMARY KEY (id)
+);
+
 
 
 
@@ -258,7 +278,18 @@ CREATE PROCEDURE spEliminarProducto
 	IN _id INT
 )
 BEGIN
+	DECLARE cantidad_producto INT;
+    
+    SELECT a.cantidad
+    INTO cantidad_producto
+    FROM almacen AS a
+    WHERE a.id_producto = _id;
+
 	DELETE FROM productos WHERE id = _id;
+    
+    IF cantidad_producto = 0 THEN
+		DELETE FROM almacen WHERE id_producto = _id;
+	END IF;
 END//
 DELIMITER ;
 
@@ -443,5 +474,160 @@ BEGIN
 	FROM almacen AS a
 	JOIN productos AS p ON a.id_producto = p.id
 	GROUP BY a.id;
+END//
+DELIMITER ;
+
+
+
+14. Procedimiento almacen para actualizar la cantidad del producto en almacen.
+DELIMITER //
+CREATE PROCEDURE spActualizarAlmacen
+(
+    IN _id			 	INT,
+    IN _cantidad		INT
+)
+BEGIN
+	IF _cantidad IS NOT NULL THEN
+    	UPDATE almacen 
+        SET cantidad = _cantidad
+        WHERE id_producto = _id;
+    END IF;
+END//
+DELIMITER ;
+
+
+
+15. Procedimiento almacenado para insertar en la tabla sucursales.
+DELIMITER //
+CREATE PROCEDURE spInsertarSucursal
+(
+    IN _nombre		VARCHAR(100), 
+    IN _direccion  	VARCHAR(300),  
+    IN _telefono 	VARCHAR(10),
+    IN _responsable	VARCHAR(100)
+)
+BEGIN
+	INSERT INTO sucursales (nombre, direccion, telefono, responsable)  VALUES
+	(_nombre, _direccion, _telefono, _responsable);
+END//
+DELIMITER ;
+
+
+
+16. Procedimiento almacenado para mostrar todas las sucursales.
+DELIMITER //
+CREATE PROCEDURE spMostrarSucursales
+()
+BEGIN
+	SELECT *
+    FROM sucursales;
+END//
+DELIMITER ;
+
+
+
+17. Procedimiento almacenado para actualizar sucursales.
+DELIMITER //
+CREATE PROCEDURE spActualizarSucursal
+(
+    IN _id			 	INT,
+    IN _nombre		VARCHAR(100), 
+    IN _direccion  	VARCHAR(300),  
+    IN _telefono 	VARCHAR(10),
+    IN _responsable	VARCHAR(100)
+)
+BEGIN
+	IF _nombre IS NOT NULL THEN
+    	UPDATE sucursales 
+        SET nombre = _nombre
+        WHERE id = _id;
+    END IF;
+
+	IF _direccion IS NOT NULL THEN
+    	UPDATE sucursales 
+        SET direccion = _direccion
+        WHERE id = _id;
+    END IF;
+    
+	IF _telefono IS NOT NULL THEN
+    	UPDATE sucursales 
+        SET telefono = _telefono
+        WHERE id = _id;
+    END IF;
+
+	IF _responsable IS NOT NULL THEN
+    	UPDATE sucursales 
+        SET responsable = _responsable
+        WHERE id = _id;
+    END IF;
+END//
+DELIMITER ;
+
+
+
+18. Procedimiento almacenado para eliminar sucursales.
+DELIMITER //
+CREATE PROCEDURE spEliminarSucursal
+(
+	IN _id INT
+)
+BEGIN
+	DELETE FROM sucursales WHERE id = _id;
+END//
+DELIMITER ;
+
+
+
+19. Procedimiento almacen para insertar en la tabla admin_entradas.
+DELIMITER //
+CREATE PROCEDURE spInsertarAdminEntrada
+()
+BEGIN
+	INSERT INTO admin_entradas (fecha, hora)
+    VALUES (CURDATE(), CURTIME());
+END//
+DELIMITER ;
+
+
+
+20. Procedimiento almacen para insertar en la tabla entradas.
+DELIMITER //
+CREATE PROCEDURE spInsertarEntrada
+(
+   IN _nombre_producto 	VARCHAR(50),
+   IN _nombre_proveedor VARCHAR(30),
+   IN _nombre_usuario	VARCHAR(50),
+   IN _precio_unitario 	DECIMAL(10, 3),
+   IN _cantidad			INT
+)
+BEGIN
+	DECLARE _id_admin_entradas INT;
+    DECLARE _id_producto INT;
+    DECLARE _id_proveedor INT;
+    DECLARE _id_usuario INT;
+    
+    SELECT ae.id
+    INTO _id_admin_entradas
+    FROM admin_entradas AS ae
+    ORDER BY ae.id DESC
+    LIMIT 1;
+    
+    SELECT p.id
+    INTO _id_producto
+    FROM productos AS p
+    WHERE p.nombre = _nombre_producto;
+    
+    SELECT pr.id
+    INTO _id_proveedor
+    FROM proveedores AS pr
+    WHERE pr.nombre = _nombre_proveedor;
+    
+    SELECT u.id
+    INTO _id_usuario
+    FROM usuarios AS u
+    WHERE u.nombre_usuario = _nombre_usuario;
+
+	INSERT INTO entradas (id_admin_entradas, id_producto, id_proveedor, id_usuario, precio_unitario, cantidad)  VALUES
+	(_id_admin_entradas, _id_producto, _id_proveedor, _id_usuario, _precio_unitario, _cantidad);
 END//
 DELIMITER ;
