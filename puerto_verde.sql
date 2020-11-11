@@ -1,4 +1,3 @@
-Tablas:
 CREATE TABLE IF NOT EXISTS proveedores
 (
     id 					INT AUTO_INCREMENT,
@@ -8,6 +7,8 @@ CREATE TABLE IF NOT EXISTS proveedores
     email               VARCHAR(50)  NOT NULL,
     PRIMARY KEY (id)
 );
+
+DROP TABLE productos;
 
 CREATE TABLE IF NOT EXISTS productos
 (
@@ -151,9 +152,6 @@ CREATE TABLE IF NOT EXISTS cortes
 
 
 
-
-Procedimientos almacenados:
-1. Procedimiento almacenado para insertar en la tabla proveedores.
 DELIMITER //
 CREATE PROCEDURE spInsertarProveedor
 (
@@ -168,11 +166,11 @@ BEGIN
 END//
 DELIMITER ;
 
-CALL spInsertarProveedor ('Prueba', 'Centro', '5564191682', 'a@algo.com');
+CALL spInsertarProveedor('Proveedor 2', 'Ixtapa', '54321', 'sadasd@algo.com');
 
+SELECT *
+FROM proveedores;
 
-
-2. Procedimiento almacenado para mostrar todos los proveedores.
 DELIMITER //
 CREATE PROCEDURE spMostrarProveedores
 ()
@@ -182,11 +180,8 @@ BEGIN
 END//
 DELIMITER ;
 
-CALL spMostrarProveedores ();
 
 
-
-3. Procedimiento almacenado para actualizar proveedores.
 DELIMITER //
 CREATE PROCEDURE spActualizarProveedor
 (
@@ -225,7 +220,6 @@ DELIMITER ;
 
 
 
-4. Procedimiento almacenado para eliminar proveedores.
 DELIMITER //
 CREATE PROCEDURE spEliminarProveedor
 (
@@ -238,7 +232,6 @@ DELIMITER ;
 
 
 
-5. Procedimiento almacenado para insertar en la tabla productos.
 DELIMITER //
 CREATE PROCEDURE spInsertarProducto
 (
@@ -254,9 +247,11 @@ BEGIN
 END//
 DELIMITER ;
 
+CALL spInsertarProducto('Producto 2', 'Descripción del producto 2', 'Prueba', '10', 'Prueba');
 
+SELECT *
+FROM productos;
 
-6. Procedimiento almacenado para mostrar todos los productos.
 DELIMITER //
 CREATE PROCEDURE spMostrarProductos
 ()
@@ -268,7 +263,6 @@ DELIMITER ;
 
 
 
-7. Procedimiento almacenado para actualizar productos.
 DELIMITER //
 CREATE PROCEDURE spActualizarProducto
 (
@@ -314,7 +308,6 @@ DELIMITER ;
 
 
 
-8. Procedimiento almacenado para eliminar productos.
 DELIMITER //
 CREATE PROCEDURE spEliminarProducto
 (
@@ -336,9 +329,8 @@ BEGIN
 END//
 DELIMITER ;
 
+DROP PROCEDURE spEliminarProducto
 
-
-9. Procedimiento almacenado para insertar en la tabla usuarios.
 DELIMITER //
 CREATE PROCEDURE spInsertarUsuario
 (
@@ -360,9 +352,11 @@ BEGIN
 END//
 DELIMITER ;
 
+CALL spInsertarUsuario('LandoWolf', 'Luis Orlando', 'Avila', 'Garcia', '5564191682', 'Ciudad de México', 'CDMX', 'Las Cruces', 'Ahuatla', 'S/N', 'LandoWolf10*');
 
+SELECT *
+FROM usuarios;
 
-10. Procedimiento almacenado para mostrar todos los usuarios.
 DELIMITER //
 CREATE PROCEDURE spMostrarUsuarios
 ()
@@ -374,7 +368,6 @@ DELIMITER ;
 
 
 
-11. Procedimiento almacenado para actualizar usuarios.
 DELIMITER //
 CREATE PROCEDURE spActualizarUsuario
 (
@@ -462,7 +455,6 @@ DELIMITER ;
 
 
 
-12. Procedimiento almacenado para eliminar usuarios.
 DELIMITER //
 CREATE PROCEDURE spEliminarUsuario
 (
@@ -475,7 +467,6 @@ DELIMITER ;
 
 
 
-13. Procedimiento almacenado para insertar en la tabla almacen.
 DELIMITER //
 CREATE PROCEDURE spInsertarAlmacen
 (
@@ -506,9 +497,10 @@ BEGIN
 END//
 DELIMITER ;
 
+CALL spInsertarAlmacen('Producto 1', 5);
 
 
-13. Procedimiento almacenado para mostrar los productos en el almacen.
+
 DELIMITER //
 CREATE PROCEDURE spMostrarAlmacen
 ()
@@ -522,7 +514,6 @@ DELIMITER ;
 
 
 
-14. Procedimiento almacen para actualizar la cantidad del producto en almacen.
 DELIMITER //
 CREATE PROCEDURE spActualizarAlmacen
 (
@@ -540,7 +531,6 @@ DELIMITER ;
 
 
 
-15. Procedimiento almacenado para insertar en la tabla sucursales.
 DELIMITER //
 CREATE PROCEDURE spInsertarSucursal
 (
@@ -557,7 +547,6 @@ DELIMITER ;
 
 
 
-16. Procedimiento almacenado para mostrar todas las sucursales.
 DELIMITER //
 CREATE PROCEDURE spMostrarSucursales
 ()
@@ -569,7 +558,6 @@ DELIMITER ;
 
 
 
-17. Procedimiento almacenado para actualizar sucursales.
 DELIMITER //
 CREATE PROCEDURE spActualizarSucursal
 (
@@ -608,7 +596,6 @@ DELIMITER ;
 
 
 
-18. Procedimiento almacenado para eliminar sucursales.
 DELIMITER //
 CREATE PROCEDURE spEliminarSucursal
 (
@@ -621,7 +608,6 @@ DELIMITER ;
 
 
 
-19. Procedimiento almacenado para insertar en la tabla admin_entradas.
 DELIMITER //
 CREATE PROCEDURE spInsertarAdminEntrada
 ()
@@ -633,7 +619,6 @@ DELIMITER ;
 
 
 
-20. Procedimiento almacenado para insertar en la tabla entradas.
 DELIMITER //
 CREATE PROCEDURE spInsertarEntrada
 (
@@ -677,7 +662,6 @@ DELIMITER ;
 
 
 
-21. Procedimiento almacenado para insertar en la tabla admin_salidas.
 DELIMITER //
 CREATE PROCEDURE spInsertarAdminSalida
 ()
@@ -689,7 +673,6 @@ DELIMITER ;
 
 
 
-22. Procedimiento almacenado para insertar en la tabla salidas.
 DELIMITER //
 CREATE PROCEDURE spInsertarSalida
 (
@@ -730,7 +713,6 @@ DELIMITER ;
 
 
 
-23. Procedimiento almacenado para insertar en la tabla costos.
 DELIMITER //
 CREATE PROCEDURE spInsertarCosto
 (
@@ -754,7 +736,6 @@ DELIMITER ;
 
 
 
-24. Procedimiento almacenado para insertar en la tabla gastos.
 DELIMITER //
 CREATE PROCEDURE spInsertarGasto
 (
@@ -779,7 +760,6 @@ DELIMITER ;
 
 
 
-25. Procedimiento almacenado para realizar cortes.
 DELIMITER //
 CREATE PROCEDURE spRealizarCorte
 ()
@@ -829,3 +809,39 @@ BEGIN
     (CURDATE(), CURTIME());
 END//
 DELIMITER ;
+
+
+
+
+
+
+SELECT *
+FROM productos;
+
+SELECT *
+FROM almacen;
+
+SELECT *
+FROM sucursales;
+
+SELECT *
+FROM admin_salidas;
+
+SELECT *
+FROM salidas;
+
+TRUNCATE TABLE admin_entradas;
+
+INSERT INTO periodo (fecha, hora) VALUES (CURDATE(), CURTIME());
+
+SELECT *
+FROM periodo;
+
+SELECT *
+FROM costos;
+
+SELECT *
+FROM gastos;
+
+SELECT *
+FROM cortes;
